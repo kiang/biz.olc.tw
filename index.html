@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template">
+<head>
+    <meta charset="utf-8">
+    <title>統一編號檢索系統</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#0b0c0c">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    
+    <link rel="stylesheet" href="govuk-frontend.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="govuk-template__body">
+    <script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
+
+    <a href="#main-content" class="govuk-skip-link" data-module="govuk-skip-link">Skip to main content</a>
+
+    <header class="govuk-header" role="banner" data-module="govuk-header">
+        <div class="govuk-header__container govuk-width-container">
+            <div class="govuk-header__logo">
+                <a href="#" class="govuk-header__link govuk-header__link--homepage">
+                    <span class="govuk-header__logotype">
+                        <span class="govuk-header__logotype-text">
+                            統一編號檢索系統
+                        </span>
+                    </span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="govuk-width-container">
+        <main class="govuk-main-wrapper" id="main-content" role="main">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+                    <!-- Search bar always visible -->
+                    <div class="govuk-!-margin-bottom-6">
+                        <form class="govuk-form" id="search-form">
+                            <div class="govuk-form-group">
+                                <label class="govuk-label govuk-label--m" for="business-id">
+                                    統一編號檢索
+                                </label>
+                                <div id="business-id-hint" class="govuk-hint">
+                                    請輸入8位數統一編號，例如：00000016
+                                </div>
+                                <div class="govuk-input__wrapper">
+                                    <input class="govuk-input govuk-input--width-10" id="business-id" name="business-id" type="text" 
+                                           aria-describedby="business-id-hint" placeholder="00000016" maxlength="8" pattern="[0-9]{8}">
+                                    <button class="govuk-button govuk-!-margin-left-2" type="submit" id="search-button">
+                                        查詢
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+
+                        <div id="search-status" class="govuk-inset-text" style="display: none;">
+                            <span id="search-status-text"></span>
+                        </div>
+                    </div>
+                    
+                    <div id="loading" class="govuk-inset-text" style="display: none;">
+                        載入中...
+                    </div>
+                    
+                    <div id="error" class="govuk-error-summary" style="display: none;">
+                        <div class="govuk-error-summary__body">
+                            <p id="error-message"></p>
+                        </div>
+                    </div>
+
+                    <div id="content">
+                        <h1 class="govuk-heading-xl">統一編號檢索系統</h1>
+                        <p class="govuk-body-l">
+                            輸入統一編號查詢企業資訊。
+                        </p>
+
+                        <details class="govuk-details govuk-!-margin-top-6" data-module="govuk-details">
+                            <summary class="govuk-details__summary">
+                                <span class="govuk-details__summary-text">
+                                    或使用網址列直接查詢
+                                </span>
+                            </summary>
+                            <div class="govuk-details__text">
+                                <ul class="govuk-list govuk-list--bullet">
+                                    <li>公司資料：#company/00000016</li>
+                                    <li>商業資料：#business/00000001</li>
+                                </ul>
+                            </div>
+                        </details>
+                    </div>
+
+                    <div id="company-data" style="display: none;">
+                        <div class="govuk-grid-row">
+                            <div class="govuk-grid-column-full">
+                                <h1 class="govuk-heading-xl" id="company-name" style="margin-bottom: 10px;"></h1>
+                                <p class="govuk-body-l govuk-!-margin-bottom-6">
+                                    統一編號 <span id="company-number-display" class="govuk-!-font-weight-bold"></span>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="govuk-grid-row">
+                            <div class="govuk-grid-column-two-thirds">
+                                <div id="company-overview">
+                                    <h2 class="govuk-heading-m">公司概況</h2>
+                                    <dl class="govuk-summary-list govuk-summary-list--no-border">
+                                        <div class="govuk-summary-list__row">
+                                            <dt class="govuk-summary-list__key">公司狀態</dt>
+                                            <dd class="govuk-summary-list__value" id="company-status-overview"></dd>
+                                        </div>
+                                        <div class="govuk-summary-list__row">
+                                            <dt class="govuk-summary-list__key">公司類型</dt>
+                                            <dd class="govuk-summary-list__value" id="company-type-overview"></dd>
+                                        </div>
+                                        <div class="govuk-summary-list__row">
+                                            <dt class="govuk-summary-list__key">設立日期</dt>
+                                            <dd class="govuk-summary-list__value" id="company-incorporated-overview"></dd>
+                                        </div>
+                                    </dl>
+                                </div>
+
+                                <div id="company-addresses" class="govuk-!-margin-top-6">
+                                    <h2 class="govuk-heading-m">登記地址</h2>
+                                    <div id="company-address-display" class="govuk-body"></div>
+                                </div>
+
+                                <div id="company-all-details" class="govuk-!-margin-top-8">
+                                    <details class="govuk-details" data-module="govuk-details">
+                                        <summary class="govuk-details__summary">
+                                            <span class="govuk-details__summary-text">
+                                                查看完整公司資料
+                                            </span>
+                                        </summary>
+                                        <div class="govuk-details__text">
+                                            <dl class="govuk-summary-list" id="company-details">
+                                            </dl>
+                                        </div>
+                                    </details>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="business-data" style="display: none;">
+                        <div class="govuk-grid-row">
+                            <div class="govuk-grid-column-full">
+                                <h1 class="govuk-heading-xl" id="business-name" style="margin-bottom: 10px;"></h1>
+                                <p class="govuk-body-l govuk-!-margin-bottom-6">
+                                    統一編號 <span id="business-number-display" class="govuk-!-font-weight-bold"></span>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="govuk-grid-row">
+                            <div class="govuk-grid-column-two-thirds">
+                                <div id="business-overview">
+                                    <h2 class="govuk-heading-m">商業概況</h2>
+                                    <dl class="govuk-summary-list govuk-summary-list--no-border">
+                                        <div class="govuk-summary-list__row">
+                                            <dt class="govuk-summary-list__key">商業狀態</dt>
+                                            <dd class="govuk-summary-list__value" id="business-status-overview"></dd>
+                                        </div>
+                                        <div class="govuk-summary-list__row">
+                                            <dt class="govuk-summary-list__key">組織類型</dt>
+                                            <dd class="govuk-summary-list__value" id="business-type-overview"></dd>
+                                        </div>
+                                        <div class="govuk-summary-list__row">
+                                            <dt class="govuk-summary-list__key">登記日期</dt>
+                                            <dd class="govuk-summary-list__value" id="business-registered-overview"></dd>
+                                        </div>
+                                    </dl>
+                                </div>
+
+                                <div id="business-addresses" class="govuk-!-margin-top-6">
+                                    <h2 class="govuk-heading-m">登記地址</h2>
+                                    <div id="business-address-display" class="govuk-body"></div>
+                                </div>
+
+                                <div id="business-all-details" class="govuk-!-margin-top-8">
+                                    <details class="govuk-details" data-module="govuk-details">
+                                        <summary class="govuk-details__summary">
+                                            <span class="govuk-details__summary-text">
+                                                查看完整商業資料
+                                            </span>
+                                        </summary>
+                                        <div class="govuk-details__text">
+                                            <dl class="govuk-summary-list" id="business-details">
+                                            </dl>
+                                        </div>
+                                    </details>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <footer class="govuk-footer" role="contentinfo">
+        <div class="govuk-width-container">
+            <div class="govuk-footer__meta">
+                <div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
+                    <span class="govuk-footer__licence-description">
+                        本站資料僅供參考，本網站不承擔任何責任或保證、也不表明任何立場或保證內容的準確性、即時性，資料方面疑問請洽詢各主管機關
+                    </span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script type="module" src="govuk-frontend.min.js"></script>
+    <script src="app.js"></script>
+    <script type="module">
+        import { initAll } from './govuk-frontend.min.js'
+        initAll()
+    </script>
+</body>
+</html>

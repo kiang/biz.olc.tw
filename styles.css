@@ -1,0 +1,71 @@
+/* Additional custom styles for the business information service */
+
+.govuk-summary-list {
+    margin-bottom: 30px;
+}
+
+.govuk-summary-list__row {
+    border-bottom: 1px solid #b1b4b6;
+}
+
+.govuk-summary-list__key {
+    font-weight: bold;
+    width: 30%;
+}
+
+.govuk-summary-list__value {
+    width: 70%;
+}
+
+#loading {
+    text-align: center;
+    padding: 20px;
+}
+
+#error {
+    margin-bottom: 30px;
+}
+
+.govuk-header__logotype-text {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* Search bar styling */
+.govuk-input__wrapper {
+    display: flex;
+    align-items: end;
+    gap: 10px;
+}
+
+.govuk-input__wrapper .govuk-input {
+    flex: 0 0 auto;
+}
+
+.govuk-input__wrapper .govuk-button {
+    margin-bottom: 0;
+    white-space: nowrap;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .govuk-summary-list__key,
+    .govuk-summary-list__value {
+        display: block;
+        width: 100%;
+    }
+    
+    .govuk-summary-list__key {
+        margin-bottom: 5px;
+    }
+    
+    .govuk-input__wrapper {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .govuk-input__wrapper .govuk-button {
+        margin-top: 10px;
+        margin-left: 0 !important;
+    }
+}
