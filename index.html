@@ -87,6 +87,7 @@
                                 <ul class="govuk-list govuk-list--bullet">
                                     <li>公司資料：#company/00000016</li>
                                     <li>商業資料：#business/00000001</li>
+                                    <li>其他資料：#others/00000001</li>
                                 </ul>
                             </div>
                         </details>
@@ -188,6 +189,58 @@
                                         </summary>
                                         <div class="govuk-details__text">
                                             <dl class="govuk-summary-list" id="business-details">
+                                            </dl>
+                                        </div>
+                                    </details>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="others-data" style="display: none;">
+                        <div class="govuk-grid-row">
+                            <div class="govuk-grid-column-full">
+                                <h1 class="govuk-heading-xl" id="others-name" style="margin-bottom: 10px;"></h1>
+                                <p class="govuk-body-l govuk-!-margin-bottom-6">
+                                    統一編號 <span id="others-number-display" class="govuk-!-font-weight-bold"></span>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="govuk-grid-row">
+                            <div class="govuk-grid-column-two-thirds">
+                                <div id="others-overview">
+                                    <h2 class="govuk-heading-m">其他概況</h2>
+                                    <dl class="govuk-summary-list govuk-summary-list--no-border">
+                                        <div class="govuk-summary-list__row">
+                                            <dt class="govuk-summary-list__key">狀態</dt>
+                                            <dd class="govuk-summary-list__value" id="others-status-overview"></dd>
+                                        </div>
+                                        <div class="govuk-summary-list__row">
+                                            <dt class="govuk-summary-list__key">類型</dt>
+                                            <dd class="govuk-summary-list__value" id="others-type-overview"></dd>
+                                        </div>
+                                        <div class="govuk-summary-list__row">
+                                            <dt class="govuk-summary-list__key">日期</dt>
+                                            <dd class="govuk-summary-list__value" id="others-date-overview"></dd>
+                                        </div>
+                                    </dl>
+                                </div>
+
+                                <div id="others-addresses" class="govuk-!-margin-top-6">
+                                    <h2 class="govuk-heading-m">地址</h2>
+                                    <div id="others-address-display" class="govuk-body"></div>
+                                </div>
+
+                                <div id="others-all-details" class="govuk-!-margin-top-8">
+                                    <details class="govuk-details" data-module="govuk-details">
+                                        <summary class="govuk-details__summary">
+                                            <span class="govuk-details__summary-text">
+                                                查看完整資料
+                                            </span>
+                                        </summary>
+                                        <div class="govuk-details__text">
+                                            <dl class="govuk-summary-list" id="others-details">
                                             </dl>
                                         </div>
                                     </details>

@@ -41,8 +41,11 @@ class BusinessInfoApp {
         } else if (type === 'business') {
             this.loadBusinessData(id);
             this.prefillSearchBar(id);
+        } else if (type === 'others') {
+            this.loadOthersData(id);
+            this.prefillSearchBar(id);
         } else {
-            this.showError('類型錯誤，請使用 "company" 或 "business"');
+            this.showError('類型錯誤，請使用 "company"、"business" 或 "others"');
         }
     }
 
@@ -54,6 +57,11 @@ class BusinessInfoApp {
     async loadBusinessData(id) {
         const url = `https://kiang.github.io/biz_business/${id.charAt(0)}/${id}.json`;
         await this.loadData(url, 'business', id);
+    }
+
+    async loadOthersData(id) {
+        const url = `https://kiang.github.io/biz_others/${id.charAt(0)}/${id}.json`;
+        await this.loadData(url, 'others', id);
     }
 
     async loadData(url, type, id) {
@@ -74,6 +82,8 @@ class BusinessInfoApp {
                 this.displayCompanyData(data);
             } else if (type === 'business') {
                 this.displayBusinessData(data);
+            } else if (type === 'others') {
+                this.displayOthersData(data);
             }
             
         } catch (error) {
@@ -83,8 +93,10 @@ class BusinessInfoApp {
             if (error.message.includes('404')) {
                 if (type === 'company') {
                     errorMessage = `找不到統一編號 ${id} 的公司資料，請確認編號是否正確`;
-                } else {
+                } else if (type === 'business') {
                     errorMessage = `找不到統一編號 ${id} 的商業資料，請確認編號是否正確`;
+                } else {
+                    errorMessage = `找不到統一編號 ${id} 的其他資料，請確認編號是否正確`;
                 }
             } else if (error.message.includes('403')) {
                 errorMessage = '無權限存取此資料';
@@ -297,6 +309,76 @@ class BusinessInfoApp {
         businessSection.style.display = 'block';
     }
 
+    displayOthersData(data) {
+        const othersSection = document.getElementById('others-data');
+        const detailsContainer = document.getElementById('others-details');
+        
+        // Set main others information
+        document.getElementById('others-name').textContent = data['名稱'] || data['公司名稱'] || data['商業名稱'] || data['單位名稱'] || data['機關名稱'] || data['機關學校名稱'] || 'Name Not Available';
+        document.getElementById('others-number-display').textContent = data.id || 'N/A';
+        
+        // Set overview section
+        document.getElementById('others-status-overview').textContent = data['登記現況'] || data['狀態'] || 'N/A';
+        document.getElementById('others-type-overview').textContent = data['組織類型'] || data['類型'] || 'N/A';
+        document.getElementById('others-date-overview').textContent = 
+            data['核准設立日期'] && typeof data['核准設立日期'] === 'object' && data['核准設立日期'].year ? 
+            this.formatChineseDate(data['核准設立日期']) : 
+            (data['設立日期'] || data['成立日期'] || 'N/A');
+        
+        // Set address
+        document.getElementById('others-address-display').innerHTML = 
+            this.formatAddress(data['地址'] || data['公司所在地'] || data['所在地']) || 'N/A';
+        
+        // Clear existing detailed content
+        detailsContainer.innerHTML = '';
+        
+        // Display all fields from JSON in details section
+        Object.keys(data).forEach(key => {
+            if (key === 'crawled_at') return; // Skip crawled_at field
+            
+            const row = document.createElement('div');
+            row.className = 'govuk-summary-list__row';
+            
+            const keyCell = document.createElement('dt');
+            keyCell.className = 'govuk-summary-list__key';
+            keyCell.textContent = key;
+            
+            const valueCell = document.createElement('dd');
+            valueCell.className = 'govuk-summary-list__value';
+            
+            let value = data[key];
+            
+            // Handle different data types
+            if (key.includes('日期') || key.includes('變更')) {
+                if (typeof value === 'object' && value.year) {
+                    value = this.formatChineseDate(value);
+                }
+            } else if (Array.isArray(value)) {
+                const arrayItems = value.filter(item => item !== null && item !== undefined && item !== '');
+                if (arrayItems.length === 0) {
+                    value = 'N/A';
+                } else {
+                    value = arrayItems.map(item => {
+                        if (typeof item === 'object') {
+                            return JSON.stringify(item, null, 2);
+                        }
+                        return item;
+                    }).join(', ');
+                }
+            } else if (typeof value === 'object') {
+                value = JSON.stringify(value, null, 2);
+            }
+            
+            valueCell.textContent = value || 'N/A';
+            
+            row.appendChild(keyCell);
+            row.appendChild(valueCell);
+            detailsContainer.appendChild(row);
+        });
+        
+        othersSection.style.display = 'block';
+    }
+
     formatDate(dateString) {
         if (!dateString) return null;
         
@@ -446,7 +528,18 @@ class BusinessInfoApp {
                 return `business/${id}`;
             }
         } catch (error) {
-            // Not found in either
+            // Continue to try others
+        }
+        
+        // Try others
+        try {
+            const othersUrl = `https://kiang.github.io/biz_others/${id.charAt(0)}/${id}.json`;
+            const othersResponse = await fetch(othersUrl);
+            if (othersResponse.ok) {
+                return `others/${id}`;
+            }
+        } catch (error) {
+            // Not found in any
         }
         
         return null;
@@ -465,6 +558,10 @@ class BusinessInfoApp {
         document.getElementById('content').style.display = 'none';
         document.getElementById('company-data').style.display = 'none';
         document.getElementById('business-data').style.display = 'none';
+        const othersSection = document.getElementById('others-data');
+        if (othersSection) {
+            othersSection.style.display = 'none';
+        }
         this.hideError();
         this.hideSearchStatus();
     }
