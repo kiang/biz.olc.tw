@@ -314,12 +314,12 @@ class BusinessInfoApp {
         const detailsContainer = document.getElementById('others-details');
         
         // Set main others information
-        document.getElementById('others-name').textContent = data['名稱'] || data['公司名稱'] || data['商業名稱'] || data['單位名稱'] || data['機關名稱'] || data['機關學校名稱'] || 'Name Not Available';
+        document.getElementById('others-name').textContent = data['名稱'] || data['公司名稱'] || data['商業名稱'] || data['單位名稱'] || data['機關名稱'] || data['寺廟名稱'] || data['機關學校名稱'] || 'Name Not Available';
         document.getElementById('others-number-display').textContent = data.id || 'N/A';
         
         // Set overview section
-        document.getElementById('others-status-overview').textContent = data['登記現況'] || data['狀態'] || 'N/A';
-        document.getElementById('others-type-overview').textContent = data['組織類型'] || data['類型'] || 'N/A';
+        document.getElementById('others-status-overview').textContent = data['登記現況'] || data['狀態'] || data['登記別'] || 'N/A';
+        document.getElementById('others-type-overview').textContent = data['組織類型'] || data['類型'] || (data['寺廟名稱'] ? '寺廟' : 'N/A');
         document.getElementById('others-date-overview').textContent = 
             data['核准設立日期'] && typeof data['核准設立日期'] === 'object' && data['核准設立日期'].year ? 
             this.formatChineseDate(data['核准設立日期']) : 
